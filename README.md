@@ -48,7 +48,7 @@ Note: "master" is being used for the main branch name as that's seemingly what G
 Look [here](https://forum.obsidian.md/t/github-wiki-kinda-works-to-host-the-wiki/2980) for more background.
 
 > [!WARNING]
-> While I use this everyday to maintain [this](https://github.com/MetabolicEngineeringGroupCBMA/MetabolicEngineeringGroupCBMA.github.io/wiki) wiki, this was not tested on other use cases.
+> While I used this everyday to maintain an obsidian vault as a GH wiki, this was not tested on other use cases.
 > ***Back up*** before using this on your repositories. Even better, run through the test below to make sure it works on your system first! This may not even be the best way to solve this problem.
 > 
 ~ [BjornFJohansson](https://github.com/BjornFJohansson)
