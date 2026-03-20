@@ -17,9 +17,8 @@ runs:
         path: 'obsidian-vault'
     
     - name: Set up python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
-        cache: pip
         python-version: "3.14"
 
     - name: 'Convert Obsidian notes to GitHub Wiki format'
