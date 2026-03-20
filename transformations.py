@@ -35,8 +35,17 @@ def remove_exclamation_mark(m):
 def transform_image_links(text):
     return re.sub(r"(!)(\[\[.+\]\])", remove_exclamation_mark, text)
 
+def modified_property(m):
+    modified_date = m.group(2)
+    sub = f"<sub>last modified: {modified_date}</sub>\n"
+    return sub
+
+def transform_modified_property(text):
+    return re.sub(r"---\n(?s:.)*created\: (.*)(?s:.)*last modified\: (.*)(?s:.)*---", modified_property, text)
+
 def run_all_transformations(text):
     text = transform_page_links(text)
     text = transform_header_links(text)
     text = transform_image_links(text)
+    text = transform_modified_property(text)
     return text
