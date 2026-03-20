@@ -48,7 +48,8 @@ else:
     # Retrieve list of files changed in last commit
     try:
         header, *filenames = subprocess.check_output("git log -1 --stat --oneline --name-only | grep -v '.*'", shell=True, cwd=args.input).splitlines()
-        old_files = [Path(f"{args.input}/{f.decode()}") for f in filenames]
+        filenames = [f.decode() for f in filenames]
+        old_files = [Path(f"{args.input}/{f}") for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == ".md" and p.is_file()]
         print(f"Files in last commit: {[str(f) for f in old_files]}")
     except Exception as e:
@@ -59,7 +60,7 @@ else:
 old_other_files = [p for p in old_files if p.suffix != ".md" and p.is_file()]
 
 # Create corresponding output file paths
-new_files = [Path(f"{args.output}/{f.decode()}") for f in filenames]
+new_files = [Path(f"{args.output}/{f}") for f in filenames]
 new_md_files = [p for p in new_files if p.suffix == ".md"]
 new_other_files = [p for p in new_files if p.suffix != ".md" and p.is_file()]
 
