@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import sys
+import re
 import subprocess
 from pathlib import Path
 from transformations import run_all_transformations
@@ -60,7 +61,7 @@ else:
 old_other_files = [p for p in old_files if p.suffix != ".md" and p.is_file()]
 
 # Create corresponding output file paths
-new_files = [Path(f"{args.output}/{f.replace(f'{args.input}/', '')}") for f in filenames]
+new_files = [Path(re.sub(f'^{args.input}', args.output, f)) for f in filenames]
 new_md_files = [p for p in new_files if p.suffix == ".md"]
 new_other_files = [p for p in new_files if p.suffix != ".md" and p.is_file()]
 
