@@ -31,18 +31,12 @@ runs:
       run: 'python vault-to-wiki/obsidian-to-github-wiki.py --input obsidian-vault --output ./wiki --convert-full-vault ${{ inputs.convert-full-vault }}'
       shell: bash
 
-    - name: "Print all files in runner for debugging"
-      run: "ls -lah"
-      shell: bash
-
     - name: 'Push to GitHub Wiki repository'
       run: |
         git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo
-        ls -lah
         [[ "${CONVERT_FULL_VAULT,,}" =~ ^(true|t|yes|y|1)$ ]] && cd wiki-repo && git rm -rf * && cd ..
         cp -r ./wiki/* wiki-repo/
         cd wiki-repo
-        ls -lah
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add *
