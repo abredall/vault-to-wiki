@@ -57,9 +57,7 @@ jobs:
           convert-full-vault: true  # Remove after initial run
 ```
 
-Next, visit the `Wiki` tab of your Obsidian vault and create a starter page. This will create a repo for your wiki, located at `username/repository.wiki.git`. Add the URL of the wiki to your Obsidian Vault repo's secrets as `WIKI_REPO_URL`.
-
-Finally, visit your wiki repo and generate a token that has write permission. Save this token to your Obsidian Vault repo's secrets as `WIKI_REPO_TOKEN`.
+Next, visit the `Wiki` tab of your Obsidian vault and create a starter page. This will create a cloneable repo for your wiki, located at `username/repository.wiki.git`. This step is necessary for the action to work.
 
 Now, whenever there is a push to main for your Obsidian Vault, the action should automatically run and update the Wiki accordingly.
 
