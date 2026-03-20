@@ -38,7 +38,8 @@ convert_full_vault = args.convert_full_vault.lower() in ['true', '1', 'yes', 'y'
 if convert_full_vault:
     try: 
         print("Converting entire vault...")
-        old_files = [p for p in Path(args.input).rglob('*') if p.is_file()]
+        filenames = [str(p) for p in Path(args.input).rglob('*') if p.is_file() and not p.name.startswith('.') and not str(p).startswith('.')]
+        old_files = [Path(f) for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == '.md']
     except Exception as e:
         print(f"Failed to get files from vault: {e}", level="ERROR")
@@ -46,7 +47,7 @@ if convert_full_vault:
 else:
     # Retrieve list of files changed in last commit
     try:
-        header, *filenames = subprocess.check_output("git log -1 --stat --oneline --name-only | grep -v .obsidian", shell=True, cwd=args.input).splitlines()
+        header, *filenames = subprocess.check_output("git log -1 --stat --oneline --name-only | grep -v '.*'", shell=True, cwd=args.input).splitlines()
         old_files = [Path(f"{args.input}/{f.decode()}") for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == ".md" and p.is_file()]
         print(f"Files in last commit: {[str(f) for f in old_files]}")
