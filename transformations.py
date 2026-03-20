@@ -41,7 +41,7 @@ def modified_property(m):
     return sub
 
 def transform_modified_property(text):
-    return re.sub(r"---\n(?s:.)*created\: (.*)(?s:.)*last modified\: (.*)(?s:.)*---", modified_property, text)
+    return re.sub(r"---\n(?:.+\:.*\n)*created\: (.*)\n(?:.+\:.*\n)*last modified\: (.*)\n(?:.+\:.*\n)*---", modified_property, text)
 
 def run_all_transformations(text):
     text = transform_page_links(text)
