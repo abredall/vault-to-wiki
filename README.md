@@ -54,11 +54,14 @@ jobs:
     steps:
       - uses: abredall/vault-to-wiki@main
         with:
-          convert-full-vault: true  # Remove after initial run
+          convert-full-vault: true  # optional, wipes existing wiki and makes it a clone of the current obsidian vault.
+          resources-dir: 'resources'  # optional, change to reflect whatever directory photos/media are kept in. defaults to 'resources/'
 ```
 
 Next, visit the `Wiki` tab of your Obsidian vault and create a starter page. This will create a cloneable repo for your wiki, located at `username/repository.wiki.git`. This step is necessary for the action to work.
 
 Now, whenever there is a push to main for your Obsidian Vault, the action should automatically run and update the Wiki accordingly.
 
-**Note:** The `convert-full-vault` line of the above should be _removed_ after your first run. This will activate the default behavior of only converting files that were changed during the commit, saving on resources.
+## Caveats
+- The `convert-full-vault` line of the above can be _removed_ after your first run. This will activate the default behavior of only converting files that were changed during the commit, and can save on resources.
+- To get images working, the default behavior of the action assumes that you put all photos in `resources/` with no sub-folders. You can change the name of this folder by editing the value of `resources-dir`.
