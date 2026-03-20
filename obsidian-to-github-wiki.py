@@ -38,7 +38,7 @@ convert_full_vault = args.convert_full_vault.lower() in ['true', '1', 'yes', 'y'
 if convert_full_vault:
     try: 
         print("Converting entire vault...")
-        filenames = [str(p).replace(f"{args.input}/", "") for p in Path(args.input).rglob('*') if p.is_file() and not p.name.startswith('.') and not str(p).startswith('.') and str(p.parents[-1]) != 'Templates']
+        filenames = [str(p) for p in Path(args.input).rglob('*') if p.is_file() and not p.name.startswith('.') and not str(p).startswith('.') and str(p.parents[-1]) != 'Templates']
         old_files = [Path(f) for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == '.md']
     except Exception as e:
@@ -60,7 +60,7 @@ else:
 old_other_files = [p for p in old_files if p.suffix != ".md" and p.is_file()]
 
 # Create corresponding output file paths
-new_files = [Path(f"{args.output}/{f}") for f in filenames]
+new_files = [Path(f"{args.output}/{f.replace(f'{args.input}/', '')}") for f in filenames]
 new_md_files = [p for p in new_files if p.suffix == ".md"]
 new_other_files = [p for p in new_files if p.suffix != ".md" and p.is_file()]
 
