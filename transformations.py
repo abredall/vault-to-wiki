@@ -66,7 +66,7 @@ def table_of_contents(m):
     for line in remaining_content.splitlines():
         match line.strip():
             case s if s.startswith("# "):
-                toc_text += f"{hl_1} [{s[2:]}](#{s[2:].replace(' ', '-').lower()})\n"
+                toc_text += f"{hl_1}. [{s[2:]}](#{s[2:].replace(' ', '-').lower()})\n"
                 hl_1 += 1
                 # Reset lower levels
                 hl_2 = 1
@@ -75,7 +75,7 @@ def table_of_contents(m):
                 hl_5 = 1
                 hl_6 = 1
             case s if s.startswith("## "):
-                toc_text += f"    {hl_2} [{s[3:]}](#{s[3:].replace(' ', '-').lower()})\n"
+                toc_text += f"    {hl_2}. [{s[3:]}](#{s[3:].replace(' ', '-').lower()})\n"
                 hl_2 += 1
                 # Reset lower levels
                 hl_3 = 1
@@ -83,25 +83,25 @@ def table_of_contents(m):
                 hl_5 = 1
                 hl_6 = 1
             case s if s.startswith("### "):
-                toc_text += f"        {hl_3} [{s[4:]}](#{s[4:].replace(' ', '-').lower()})\n"
+                toc_text += f"        {hl_3}. [{s[4:]}](#{s[4:].replace(' ', '-').lower()})\n"
                 hl_3 += 1
                 # Reset lower levels
                 hl_4 = 1
                 hl_5 = 1
                 hl_6 = 1
             case s if s.startswith("#### "):
-                toc_text += f"            {hl_4} [{s[5:]}](#{s[5:].replace(' ', '-').lower()})\n"
+                toc_text += f"            {hl_4}. [{s[5:]}](#{s[5:].replace(' ', '-').lower()})\n"
                 hl_4 += 1
                 # Reset lower levels
                 hl_5 = 1
                 hl_6 = 1
             case s if s.startswith("##### "):
-                toc_text += f"                {hl_5} [{s[6:]}](#{s[6:].replace(' ', '-').lower()})\n"
+                toc_text += f"                {hl_5}. [{s[6:]}](#{s[6:].replace(' ', '-').lower()})\n"
                 hl_5 += 1
                 # Reset lower levels
                 hl_6 = 1
             case s if s.startswith("###### "):
-                toc_text += f"                    {hl_6} [{s[7:]}](#{s[7:].replace(' ', '-').lower()})\n"
+                toc_text += f"                    {hl_6}. [{s[7:]}](#{s[7:].replace(' ', '-').lower()})\n"
                 hl_6 += 1
     
     toc_text += remaining_content
