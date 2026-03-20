@@ -2,6 +2,9 @@
 import re
 from unittest import case
 
+resources_dir = 'resources'
+repo_name = None
+
 # PAGE LINK CONVERSION
 # [[file name|link text]] --> [[link text|file-name]]
 def switch_fn_linktext(m):
@@ -31,6 +34,9 @@ def transform_header_links(text):
 # ![[some image.png]] --> [[some image.png]]
 def remove_exclamation_mark(m):
     sub = " " + m.group(2)
+    if "http" not in m.group(2):  # We assume that if it's not a link, it's a local file being referenced.
+        image_path = f"https://github.com/{repo_name}/blob/main/{resources_dir}/{m.group(2).strip('[]')}"
+        sub = f"[[{image_path}]]"
     return sub
 
 def transform_image_links(text):
@@ -113,10 +119,14 @@ def table_of_contents(m):
 def transform_table_of_contents(text):
     return re.sub(r"(?s:```table-of-contents\n([\s\S]*?)```\n(.*))", table_of_contents, text)
 
-def run_all_transformations(text):
-    text = transform_page_links(text)
-    text = transform_header_links(text)
-    text = transform_image_links(text)
-    text = transform_modified_property(text)
-    text = transform_table_of_contents(text)
+def run_all_transformations(text, **kwargs):
+    global resources_dir
+    global repo_name
+    resources_dir = kwargs.get('resources_dir', 'resources')
+    repo_name = kwargs.get('repo_name')
+    text = transform_page_links(text, **kwargs)
+    text = transform_header_links(text, **kwargs)
+    text = transform_image_links(text, **kwargs)
+    text = transform_modified_property(text, **kwargs)
+    text = transform_table_of_contents(text, **kwargs)
     return text

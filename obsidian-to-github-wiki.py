@@ -25,10 +25,23 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--repo-name',
+    help='The GitHub repository for the vault/wiki in the format "owner/repo".',
+    required=True
+)
+
+parser.add_argument(
     '--convert-full-vault',
     help='Whether to convert the entire vault or only the files changed in the last commit. (true/false)',
     required=False,
     default='false'
+)
+
+parser.add_argument(
+    '--resources-dir',
+    help='Directory in the vault where resources (images, attachments) are stored. Default is "resources".',
+    required=False,
+    default='resources'
 )
 
 args = parser.parse_args()
@@ -39,7 +52,13 @@ convert_full_vault = args.convert_full_vault.lower() in ['true', '1', 'yes', 'y'
 if convert_full_vault:
     try: 
         print("Converting entire vault...")
-        filenames = [str(p) for p in Path(args.input).rglob('*') if p.is_file() and not p.name.startswith('.') and not str(p).startswith('.') and not re.match(f'^{args.input}/Templates', str(p))]
+        filenames = [
+            str(p) for p in Path(args.input).rglob('*') 
+            if p.is_file()
+            and not p.name.startswith('.')
+            and not str(p).startswith('.')
+            and not re.match(f'^{args.input}/Templates', str(p))
+        ]
         old_files = [Path(f) for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == '.md']
     except Exception as e:
@@ -48,7 +67,10 @@ if convert_full_vault:
 else:
     # Retrieve list of files changed in last commit
     try:
-        header, *filenames = subprocess.check_output("git log -1 --stat --oneline --name-only | grep -v '.*' | grep -v 'Templates/'", shell=True, cwd=args.input).splitlines()
+        header, *filenames = subprocess.check_output(
+            "git log -1 --stat --oneline --name-only | grep -v '.*' | grep -v 'Templates/'",
+            shell=True, cwd=args.input
+        ).splitlines()
         filenames = [f.decode() for f in filenames]
         old_files = [Path(f"{args.input}/{f}") for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == ".md" and p.is_file()]
@@ -69,7 +91,7 @@ new_other_files = [p for p in new_files if p.suffix != ".md" and p.is_file()]
 print("Starting content transformations...")
 for old_file, new_file in zip(old_md_files, new_md_files):
     original_text = old_file.read_text(encoding='utf-8')
-    new_text = run_all_transformations(original_text)
+    new_text = run_all_transformations(original_text, resources_dir=args.resources_dir, repo_name=args.repo_name)
     if new_text != original_text:
         print(f"Transformed {old_file.name}")
     new_file.parent.mkdir(parents=True, exist_ok=True)
