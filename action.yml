@@ -22,6 +22,10 @@ runs:
       with:
         path: 'obsidian-vault'
     
+    - name: "Print all files in runner for debugging"
+      run: "ls -lah"
+      shell: bash
+    
     - name: Set up python
       uses: actions/setup-python@v6
       with:
