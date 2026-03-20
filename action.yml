@@ -1,12 +1,6 @@
 name: 'Convert Obsidian to GitHub Wiki'
 description: 'A GitHub Action to convert Obsidian notes to the GitHub Wiki format, and push to the wiki repository.'
 inputs:
-  wiki-repo-url:
-    description: 'The URL of the GitHub Wiki repository (e.g., https://github.com/username/repo.wiki.git)'
-    required: true
-  wiki-repo-token:
-    description: 'GitHub token with permissions to push to the wiki repository.'
-    required: true
   convert-full-vault:
     description: 'Whether to convert the entire vault or only the files changed in the last commit. (true/false)'
     required: false
@@ -22,13 +16,6 @@ runs:
       with:
         path: 'obsidian-vault'
     
-    - name: 'Checkout the GitHub Wiki repository'
-      uses: 'actions/checkout@v6'
-      with:
-        repository: ${{ inputs.wiki-repo-url }}
-        token: ${{ inputs.wiki-repo-token }}
-        path: 'wiki-repo'
-
     - name: Set up python
       uses: actions/setup-python@v4
       with:
@@ -40,13 +27,11 @@ runs:
 
     - name: 'Push to GitHub Wiki repository'
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git clone ${{ inputs.wiki-repo-url }} wiki-repo
+        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         cp -r ./wiki/* wiki-repo/
         cd wiki-repo
         git add .
         git commit -m "Update wiki from Obsidian vault"
-        git push origin main
-      env:
-        GITHUB_TOKEN: ${{ inputs.wiki-repo-token }}
+        git push

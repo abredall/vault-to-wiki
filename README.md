@@ -40,16 +40,20 @@ on:
     branches:
       - main
 
+concurrency:
+  group: vault-to-wiki
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
 jobs:
   vault-to-wiki:
     name: Convert Obsidian Vault to GitHub Wiki
     runs-on: ubuntu-slim
     steps:
-      - name: Convert Obsidian to GitHub Wiki
-        uses: abredall/vault-to-wiki@main
+      - uses: abredall/vault-to-wiki@main
         with:
-          wiki-repo-url: ${{ secrets.WIKI_REPO_URL }}
-          wiki-repo-token: ${{ secrets.WIKI_REPO_TOKEN }}
           convert-full-vault: true  # Remove after initial run
 ```
 
