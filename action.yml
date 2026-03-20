@@ -22,10 +22,6 @@ runs:
       with:
         path: 'obsidian-vault'
     
-    - name: "Print all files in runner for debugging"
-      run: "ls -lah"
-      shell: bash
-    
     - name: Set up python
       uses: actions/setup-python@v6
       with:
@@ -33,6 +29,10 @@ runs:
 
     - name: 'Convert Obsidian notes to GitHub Wiki format'
       run: 'python vault-to-wiki/obsidian-to-github-wiki.py --input obsidian-vault --output ./wiki --convert-full-vault ${{ inputs.convert-full-vault }}'
+      shell: bash
+
+    - name: "Print all files in runner for debugging"
+      run: "ls -lah"
       shell: bash
 
     - name: 'Push to GitHub Wiki repository'
