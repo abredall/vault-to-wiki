@@ -48,8 +48,11 @@ def table_of_contents(m):
     toc_settings = {}
     toc_settings_lines = m.group(1).splitlines()
     for line in toc_settings_lines:
-        key, value = line.split(': ')
-        toc_settings[key] = value
+        try:
+            key, value = line.split(': ')
+            toc_settings[key] = value
+        except ValueError:
+            continue
     
     toc_text = f"{toc_settings['title']}\n"
 
