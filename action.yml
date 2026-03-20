@@ -1,0 +1,52 @@
+name: 'Convert Obsidian to GitHub Wiki'
+description: 'A GitHub Action to convert Obsidian notes to the GitHub Wiki format, and push to the wiki repository.'
+inputs:
+  wiki-repo-url:
+    description: 'The URL of the GitHub Wiki repository (e.g., https://github.com/username/repo.wiki.git)'
+    required: true
+  wiki-repo-token:
+    description: 'GitHub token with permissions to push to the wiki repository.'
+    required: true
+  convert-full-vault:
+    description: 'Whether to convert the entire vault or only the files changed in the last commit. (true/false)'
+    required: false
+    default: 'false'
+branding:
+  icon: 'book-open'
+  color: 'white'
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Checkout the Obsidian vault'
+      uses: 'actions/checkout@v6'
+      with:
+        path: 'obsidian-vault'
+    
+    - name: 'Checkout the GitHub Wiki repository'
+      uses: 'actions/checkout@v6'
+      with:
+        repository: ${{ inputs.wiki-repo-url }}
+        token: ${{ inputs.wiki-repo-token }}
+        path: 'wiki-repo'
+
+    - name: Set up python
+      uses: actions/setup-python@v4
+      with:
+        cache: pip
+        python-version: "3.14"
+
+    - name: 'Convert Obsidian notes to GitHub Wiki format'
+      run: 'python obsidian-to-github-wiki.py --input obsidian-vault --output ./wiki --convert-full-vault ${{ inputs.convert-full-vault }}'
+
+    - name: 'Push to GitHub Wiki repository'
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git clone ${{ inputs.wiki-repo-url }} wiki-repo
+        cp -r ./wiki/* wiki-repo/
+        cd wiki-repo
+        git add .
+        git commit -m "Update wiki from Obsidian vault"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ inputs.wiki-repo-token }}
