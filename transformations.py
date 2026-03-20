@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import re
+from unittest import case
 
 # PAGE LINK CONVERSION
 # [[file name|link text]] --> [[link text|file-name]]
@@ -42,6 +43,72 @@ def modified_property(m):
 
 def transform_modified_property(text):
     return re.sub(r"---\n(?:.+\:.*\n)*created\: (.*)\n(?:.+\:.*\n)*last modified\: (.*)\n(?:.+\:.*\n)*---", modified_property, text)
+
+def table_of_contents(m):
+    toc_settings = {}
+    toc_settings_lines = m.group(1).splitlines()
+    for line in toc_settings_lines:
+        key, value = line.split(': ')
+        toc_settings[key] = value
+    
+    toc_text = f"{toc_settings['title']}\n"
+
+    remaining_content = m.group(2)
+
+    # GitHub Markdown supports 6 heading levels
+    hl_1 = 1
+    hl_2 = 1
+    hl_3 = 1
+    hl_4 = 1
+    hl_5 = 1
+    hl_6 = 1
+
+    for line in remaining_content.splitlines():
+        match line.strip():
+            case s if s.startswith("# "):
+                toc_text += f"{hl_1} [{s[2:]}](#{s[2:].replace(' ', '-').lower()})\n"
+                hl_1 += 1
+                # Reset lower levels
+                hl_2 = 1
+                hl_3 = 1
+                hl_4 = 1
+                hl_5 = 1
+                hl_6 = 1
+            case s if s.startswith("## "):
+                toc_text += f"    {hl_2} [{s[3:]}](#{s[3:].replace(' ', '-').lower()})\n"
+                hl_2 += 1
+                # Reset lower levels
+                hl_3 = 1
+                hl_4 = 1
+                hl_5 = 1
+                hl_6 = 1
+            case s if s.startswith("### "):
+                toc_text += f"        {hl_3} [{s[4:]}](#{s[4:].replace(' ', '-').lower()})\n"
+                hl_3 += 1
+                # Reset lower levels
+                hl_4 = 1
+                hl_5 = 1
+                hl_6 = 1
+            case s if s.startswith("#### "):
+                toc_text += f"            {hl_4} [{s[5:]}](#{s[5:].replace(' ', '-').lower()})\n"
+                hl_4 += 1
+                # Reset lower levels
+                hl_5 = 1
+                hl_6 = 1
+            case s if s.startswith("##### "):
+                toc_text += f"                {hl_5} [{s[6:]}](#{s[6:].replace(' ', '-').lower()})\n"
+                hl_5 += 1
+                # Reset lower levels
+                hl_6 = 1
+            case s if s.startswith("###### "):
+                toc_text += f"                    {hl_6} [{s[7:]}](#{s[7:].replace(' ', '-').lower()})\n"
+                hl_6 += 1
+    
+    toc_text += remaining_content
+    return toc_text
+
+def transform_table_of_contents(text):
+    return re.sub(r"(?s:```table-of-contents\n(.*)```\n(.*))", table_of_contents, text)
 
 def run_all_transformations(text):
     text = transform_page_links(text)
