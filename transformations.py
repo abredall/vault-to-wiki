@@ -115,4 +115,5 @@ def run_all_transformations(text):
     text = transform_header_links(text)
     text = transform_image_links(text)
     text = transform_modified_property(text)
+    text = transform_table_of_contents(text)
     return text
