@@ -11,6 +11,9 @@ branding:
 runs:
   using: 'composite'
   steps:
+    - name: 'Checkout the repository'
+      uses: 'actions/checkout@v6'
+
     - name: 'Checkout the Obsidian vault'
       uses: 'actions/checkout@v6'
       with:
@@ -22,7 +25,7 @@ runs:
         python-version: "3.14"
 
     - name: 'Convert Obsidian notes to GitHub Wiki format'
-      run: 'python obsidian-to-github-wiki.py --input obsidian-vault --output ./wiki --convert-full-vault ${{ inputs.convert-full-vault }}'
+      run: 'python vault-to-wiki/obsidian-to-github-wiki.py --input obsidian-vault --output ./wiki --convert-full-vault ${{ inputs.convert-full-vault }}'
       shell: bash
 
     - name: 'Push to GitHub Wiki repository'
