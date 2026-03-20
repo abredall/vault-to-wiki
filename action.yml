@@ -24,6 +24,7 @@ runs:
 
     - name: 'Convert Obsidian notes to GitHub Wiki format'
       run: 'python obsidian-to-github-wiki.py --input obsidian-vault --output ./wiki --convert-full-vault ${{ inputs.convert-full-vault }}'
+      shell: bash
 
     - name: 'Push to GitHub Wiki repository'
       run: |
@@ -35,3 +36,4 @@ runs:
         git add .
         git commit -m "Update wiki from Obsidian vault"
         git push
+      shell: bash
