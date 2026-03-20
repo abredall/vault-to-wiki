@@ -13,6 +13,7 @@ runs:
   steps:
     - name: 'Checkout the repository'
       uses: 'actions/checkout@v6'
+      repository: abredall/vault-to-wiki
 
     - name: 'Checkout the Obsidian vault'
       uses: 'actions/checkout@v6'
