@@ -34,6 +34,7 @@ runs:
     - name: 'Push to GitHub Wiki repository'
       run: |
         git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo
+        [[ "${CONVERT_FULL_VAULT,,}" =~ ^(true|t|yes|y|1)$ ]] && git rm -rf wiki-repo/*
         cp -r ./wiki/* wiki-repo/
         cd wiki-repo
         git config user.name "github-actions[bot]"
@@ -41,4 +42,6 @@ runs:
         git add .
         git commit -m "Update wiki from Obsidian vault"
         git push
+      env:
+        CONVERT_FULL_VAULT: ${{ inputs.convert-full-vault }}
       shell: bash
