@@ -37,9 +37,10 @@ runs:
         [[ "${CONVERT_FULL_VAULT,,}" =~ ^(true|t|yes|y|1)$ ]] && cd wiki-repo && git rm -rf * && cd ..
         cp -r ./wiki/* wiki-repo/
         cd wiki-repo
+        ls -lah
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add .
+        git add *
         git commit -m "Update wiki from Obsidian vault"
         git push
       env:
