@@ -48,7 +48,7 @@ if convert_full_vault:
 else:
     # Retrieve list of files changed in last commit
     try:
-        header, *filenames = subprocess.check_output("git log -1 --stat --oneline --name-only | grep -v '.*'", shell=True, cwd=args.input).splitlines()
+        header, *filenames = subprocess.check_output("git log -1 --stat --oneline --name-only | grep -v '.*' | grep -v 'Templates/'", shell=True, cwd=args.input).splitlines()
         filenames = [f.decode() for f in filenames]
         old_files = [Path(f"{args.input}/{f}") for f in filenames]
         old_md_files = [p for p in old_files if p.suffix == ".md" and p.is_file()]
