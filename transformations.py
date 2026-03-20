@@ -124,9 +124,9 @@ def run_all_transformations(text, **kwargs):
     global repo_name
     resources_dir = kwargs.get('resources_dir', 'resources')
     repo_name = kwargs.get('repo_name')
-    text = transform_page_links(text, **kwargs)
-    text = transform_header_links(text, **kwargs)
-    text = transform_image_links(text, **kwargs)
-    text = transform_modified_property(text, **kwargs)
-    text = transform_table_of_contents(text, **kwargs)
+    text = transform_page_links(text)
+    text = transform_header_links(text)
+    text = transform_image_links(text)
+    text = transform_modified_property(text)
+    text = transform_table_of_contents(text)
     return text
