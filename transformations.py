@@ -111,7 +111,7 @@ def table_of_contents(m):
     return toc_text
 
 def transform_table_of_contents(text):
-    return re.sub(r"(?s:```table-of-contents\n(.*)```\n(.*))", table_of_contents, text)
+    return re.sub(r"(?s:```table-of-contents\n([\s\S]*?)```\n(.*))", table_of_contents, text)
 
 def run_all_transformations(text):
     text = transform_page_links(text)
